@@ -1,9 +1,11 @@
 import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
 import { AuthService } from './auth.service';
 import { JWtGuard } from './guards/guard';
 
+@ApiTags('Identification')
 @Controller('identification')
 export class IdentificationController {
   constructor(private readonly authService: AuthService) {
@@ -29,17 +31,24 @@ export class IdentificationController {
   @UseGuards(JWtGuard)
   @Get('private')
   async privateEndPoint(@Req() request: Request) {
-    console.log(request.cookies);
-
+    console.log({
+      publicEndPoint: false,
+      token: request.cookies.access_token,
+    });
     return {
+      privateEndpoint: true,
       message: 'hello world',
     };
   }
 
   @Get('public')
   publicEndPoint(@Req() request: Request) {
-    console.log(request.cookies);
+    console.log({
+      publicEndPoint: true,
+      token: request.cookies.access_token,
+    });
     return {
+      privateEndPoint: false,
       message: 'hello world',
     };
   }
