@@ -13,12 +13,14 @@ export class IdentificationController {
   }
 
   @Get('login')
-  async login(@Res({ passthrough: true }) response: Response) {
+  async login(@Res() response: Response) {
     const { accessToken } = await this.authService.login();
-    response.cookie('access_token', accessToken, {
-      expires: new Date(Date.now() + 3600000),
-      httpOnly: true,
-    });
+    response
+      .cookie('access_token', accessToken, {
+        expires: new Date(Date.now() + 3600000),
+        httpOnly: true,
+      })
+      .send();
   }
 
   @Get('logout')
